@@ -18,6 +18,8 @@ spam_checker:
     block_room_creation: true
     room_creators_whitelist:
       - sync
+      - @sync
+      - @sync:homeserver
 ```
 
 Synapse will need to be restarted to apply the changes. To modify the list of homeservers,

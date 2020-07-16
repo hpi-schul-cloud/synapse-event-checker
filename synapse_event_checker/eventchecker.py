@@ -15,8 +15,11 @@ class EventChecker(object):
                 # can apply if the user_id is defined without a homeserver
                 if user_id.startswith(whitelisted_user_id + ":"):
                     return True  # allowed
+                # can apply if the user_id is defined without a homeserver
+                if user_id.startswith("@" + whitelisted_user_id + ":"):
+                    return True  # allowed
                 # can apply if the full user_id with homeserver is defined
-                if user_id.equals(whitelisted_user_id):
+                if user_id == whitelisted_user_id:
                     return True  # allowed
             return False  # not allowed
         return True  # allowed
