@@ -1,7 +1,23 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 class EventChecker(object):
-    def __init__(self, config):
+    def __init__(self, config, hs):
         self._block_room_creation = config.get("block_room_creation", False)
         self._room_creators_whitelist = config.get("room_creators_whitelist", [])
+
+        logger.warning("EventChecker")
+
+        self.store = self.hs.get_datastore()
+
+        threepids = await self.store.user_get_threepids("@sync:matrix.stomt.com")
+        logger.warning("threepids loaded")
+
+        #addresses = []
+        #for threepid in threepids:
+        #    if threepid["medium"] == "email":
+        #        addresses.append(threepid["address"])
 
     def check_event_for_spam(self, event):
         return False  # not spam
