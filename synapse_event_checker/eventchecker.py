@@ -1,4 +1,5 @@
 import logging
+from twisted.internet.defer import ensureDeferred
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,8 @@ class EventChecker(object):
 
         self.store = self.hs.get_datastore()
 
-        threepids = await self.store.user_get_threepids("@sync:matrix.stomt.com")
+        threepids = self.store.user_get_threepids("@sync:matrix.stomt.com")
+        ensureDeferred(threepids)
         logger.warning("threepids loaded")
 
         #addresses = []
