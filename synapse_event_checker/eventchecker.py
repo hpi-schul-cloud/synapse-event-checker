@@ -6,12 +6,13 @@ from synapse.events import EventBase
 from synapse.module_api import ModuleApi
 from synapse.types import Requester, StateMap
 
-
+import requests
 
 class EventChecker(object):
     def __init__(self, config: Dict, module_api: ModuleApi):
         self.module_api = module_api
-
+        self._room_creators_whitelist = config.get('room_creators_whitelist')
+        self._permission_endpoint = config.get("permission_endpoint")
 
     @staticmethod
     def parse_config(config: Dict) -> Dict:
@@ -35,6 +36,17 @@ class EventChecker(object):
         Returns:
             True if the request should be allowed, False otherwise.
         """
+        user_prefix = '@sso_'
+        user_id, servername, *_ = requester.user.to_string().split(':')
+        if user_id.startswith(user_prefix):
+            user_id = user_id[len(user_prefix):]
+
+        if any(user_id == whitelisted_user_id for whitelisted_user_id in self._room_creators_whitelist):
+            return True
+
+        request_result = requests.get(self._permission_endpoint + user_id)
+        if request_result.json().get('createRoom'):
+            return True
         return False
 
 

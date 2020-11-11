@@ -16,8 +16,9 @@ third_party_event_rules:
   config:
     # A list of homeservers to block invites from.
     block_room_creation: true
+    permission_endpoint: "http://server:3030/messengerPermissions/"
     room_creators_whitelist:
-      - "sync222"
+      - "@sync"
 ```
 
 Synapse will need to be restarted to apply the changes. To modify the list of homeservers,
